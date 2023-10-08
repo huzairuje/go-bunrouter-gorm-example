@@ -2,10 +2,10 @@ package article
 
 import (
 	"context"
-	"database/sql"
 	"encoding/json"
 	"errors"
 	"fmt"
+	"gorm.io/gorm"
 	"net/http"
 	"strconv"
 
@@ -151,7 +151,7 @@ func (h *Http) DetailArticle(w http.ResponseWriter, c bunrouter.Request) error {
 
 	data, err := h.serviceArticle.GetDetailArticle(ctx, int64(idInt64))
 	if err != nil {
-		if errors.Is(err, sql.ErrNoRows) {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
 			logger.Error(ctx, utils.ErrorLogFormat, err.Error(), logCtx, "h.serviceArticle.GetDetailArticle")
 			return httplib.SetErrorResponse(w, http.StatusNotFound, primitive.RecordArticleNotFound)
 		}
